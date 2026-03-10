@@ -14,6 +14,7 @@ namespace BookStore.Repository.Data
         {
                 
         }
+       
 
         public DbSet<Book> books { get; set; }
         public DbSet<Category> categories { get; set; }
