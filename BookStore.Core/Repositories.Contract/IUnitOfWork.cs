@@ -9,8 +9,7 @@ namespace BookStore.Core.Repositories.Contract
 {
     public interface IUnitOfWork : IAsyncDisposable
     {
-        IGenericRepository<Book> Books { get; }        
-        IGenericRepository<Category> Categories { get; }
+        IGenericRepository<T> Repository<T>() where T : class;
         public Task<int> SaveAsync();
 
     }

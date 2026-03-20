@@ -12,9 +12,6 @@ namespace BookStore.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
-        public IGenericRepository<Book> Books => Repository<Book>();
-
-        public IGenericRepository<Category> Categories => Repository<Category>();
 
         private readonly ApplicationDbContext _context;
 
