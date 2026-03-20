@@ -1,4 +1,5 @@
 ﻿using BookStore.Core.Entities;
+using BookStore.Core.Repositories.Contract;
 using BookStore.Core.Services.Contract;
 using System;
 using System.Collections.Generic;
@@ -10,34 +11,42 @@ namespace BookStore.Services
 {
     public class BookService : IBookService
     {
+        private readonly IUnitOfWork _unitOfWork;
 
-        public BookService()
+        public BookService(IUnitOfWork unitOfWork)
         {
-            
+            _unitOfWork = unitOfWork;   
         }
-        public Task<Book> CreateBookAsync(Book book)
+        public async Task<Book> CreateBookAsync(Book book)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteBookAsync(Guid id)
-        {
-            throw new NotImplementedException();
+            _unitOfWork.Repository<Book>().AddAsync(book);
+            await _unitOfWork.SaveAsync();
+            return book;
         }
 
-        public Task<IReadOnlyList<Book>> GetAllBooksAsync()
+        public async Task DeleteBookAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var book = await _unitOfWork.Repository<Book>().GetByIdAsync(id);
+             _unitOfWork.Repository<Book>().DeleteAsync(book);
         }
 
-        public Task<Book> GetBookByIdAsync(Guid id)
+        public async Task<IReadOnlyList<Book>> GetAllBooksAsync()
         {
-            throw new NotImplementedException();
+           return await _unitOfWork.Repository<Book>().GetAllAsync();
         }
 
-        public Task<Book> UpdateBookAsync(Book book)
+        public async Task<Book> GetBookByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+           return await _unitOfWork.Repository<Book>().GetByIdAsync(id);
+
+        }
+
+        public async Task<Book> UpdateBookAsync(Book book)
+        {
+           _unitOfWork.Repository<Book>().UpdateAsync(book);
+            await _unitOfWork.SaveAsync();
+            return book;
+
         }
     }
 }
