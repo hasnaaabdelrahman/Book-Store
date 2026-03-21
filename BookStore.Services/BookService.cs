@@ -28,6 +28,7 @@ namespace BookStore.Services
         {
             var book = await _unitOfWork.Repository<Book>().GetByIdAsync(id);
              _unitOfWork.Repository<Book>().DeleteAsync(book);
+             await _unitOfWork.SaveAsync();
         }
 
         public async Task<IReadOnlyList<Book>> GetAllBooksAsync()
