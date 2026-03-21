@@ -1,5 +1,10 @@
 
+using BookStore.Core.Repositories.Contract;
+using BookStore.Core.Services.Contract;
+using BookStore.Repository;
 using BookStore.Repository.Data;
+using BookStore.Repository.Repositories;
+using BookStore.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookStore
@@ -13,6 +18,10 @@ namespace BookStore
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
