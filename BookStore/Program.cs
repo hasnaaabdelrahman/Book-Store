@@ -18,9 +18,13 @@ namespace BookStore
             // Add services to the container.
 
             builder.Services.AddControllers();
+
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-            builder.Services.AddScoped<IBookService, BookService>();
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
