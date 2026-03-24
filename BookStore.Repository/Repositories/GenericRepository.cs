@@ -1,9 +1,11 @@
 ﻿using BookStore.Core.Repositories.Contract;
 using BookStore.Repository.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,7 +30,7 @@ namespace BookStore.Repository.Repositories
 
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
-             return await _context.Set<T>().ToListAsync();
+            return await _context.Set<T>().ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(Guid id)
