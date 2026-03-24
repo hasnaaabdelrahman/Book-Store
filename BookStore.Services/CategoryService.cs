@@ -1,4 +1,5 @@
 ﻿using BookStore.Core.Entities;
+using BookStore.Core.Repositories.Contract;
 using BookStore.Core.Services.Contract;
 using System;
 using System.Collections.Generic;
@@ -10,20 +11,40 @@ namespace BookStore.Services
 {
     public class CategoryService : ICategoryService
     {
-        public CategoryService() { }
-        public Task<Category> CreateCategoryAsync(Category category)
+        private readonly IUnitOfWork _unitOfWork;
+        public CategoryService(IUnitOfWork unitOfWork) 
         {
-            throw new NotImplementedException();
+            _unitOfWork = unitOfWork;
+        }
+        public async Task<Category> CreateCategoryAsync(Category category)
+        {
+              _unitOfWork.Repository<Category>().AddAsync(category);
+              await _unitOfWork.SaveAsync();
+            return category;
         }
 
-        public Task<IReadOnlyList<Category>> GetAllCategoriesAsync()
+        public async Task DeleteCategoryAsync(Guid id)
         {
-            throw new NotImplementedException();
+            var category = await _unitOfWork.Repository<Category>().GetByIdAsync(id);
+              _unitOfWork.Repository<Category>().DeleteAsync(category);
+                await _unitOfWork.SaveAsync();
         }
 
-        public Task<Category> GetCategoryByIdAsync(Guid id)
+        public async Task<IReadOnlyList<Category>> GetAllCategoriesAsync()
         {
-            throw new NotImplementedException();
+            return await _unitOfWork.Repository<Category>().GetAllAsync();
+        }
+
+        public async Task<Category> GetCategoryByIdAsync(Guid id)
+        {
+           return await _unitOfWork.Repository<Category>().GetByIdAsync(id);
+        }
+
+        public async Task<Category> UpdateCategoryAsync(Category category)
+        {
+            _unitOfWork.Repository<Category>().UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
+            return category;
         }
     }
 }

@@ -14,6 +14,21 @@ namespace BookStore.Repository.Data
         {
                 
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Book>()
+                .HasOne(b => b.Category)
+                .WithMany(c => c.Books)
+                .HasForeignKey(b => b.CategoryId);
+
+            modelBuilder.Entity<Category>()
+                .HasMany(c => c.Books)
+                .WithOne(b => b.Category)
+                .HasForeignKey(b => b.CategoryId);
+
+        }
        
 
         public DbSet<Book> books { get; set; }
