@@ -23,6 +23,13 @@ namespace BookStore.Services
             return category;
         }
 
+        public async Task DeleteCategoryAsync(Guid id)
+        {
+            var category = await _unitOfWork.Repository<Category>().GetByIdAsync(id);
+              _unitOfWork.Repository<Category>().DeleteAsync(category);
+                await _unitOfWork.SaveAsync();
+        }
+
         public async Task<IReadOnlyList<Category>> GetAllCategoriesAsync()
         {
             return await _unitOfWork.Repository<Category>().GetAllAsync();
@@ -31,6 +38,13 @@ namespace BookStore.Services
         public async Task<Category> GetCategoryByIdAsync(Guid id)
         {
            return await _unitOfWork.Repository<Category>().GetByIdAsync(id);
+        }
+
+        public async Task<Category> UpdateCategoryAsync(Category category)
+        {
+            _unitOfWork.Repository<Category>().UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
+            return category;
         }
     }
 }
