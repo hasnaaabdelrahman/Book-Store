@@ -1,3 +1,66 @@
-.vs/
+# ========================
+# Build folders
+# ========================
 bin/
 obj/
+
+# ========================
+# User-specific files
+# ========================
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ========================
+# VS / VS Code
+# ========================
+.vs/
+.vscode/
+
+# ========================
+# Logs
+# ========================
+*.log
+
+# ========================
+# OS files
+# ========================
+.DS_Store
+Thumbs.db
+
+# ========================
+# .NET Core
+# ========================
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ========================
+# Environment files
+# ========================
+appsettings.Development.json
+appsettings.Local.json
+
+# ========================
+# Publish
+# ========================
+publish/
+
+# ========================
+# Rider / IntelliJ
+# ========================
+.idea/
+
+# ========================
+# NuGet
+# ========================
+*.nupkg
+packages/
+
+# ========================
+# Generated files
+# ========================
+*.dll
+*.exe
+*.pdb
