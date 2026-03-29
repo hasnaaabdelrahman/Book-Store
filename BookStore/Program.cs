@@ -33,6 +33,12 @@ namespace BookStore
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddDbContext<AuthDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("AuthConnection"));
+            });
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
