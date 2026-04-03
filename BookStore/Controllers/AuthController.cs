@@ -1,4 +1,5 @@
-﻿using BookStore.Dtos.outgoingDtos;
+﻿using BookStore.Dtos.Incoming;
+using BookStore.Dtos.outgoingDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,7 @@ namespace BookStore.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterRequestDto registerRequestDto)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
         {
             var user = new IdentityUser
             {
@@ -39,6 +40,15 @@ namespace BookStore.Controllers
             return Ok("User registered successfully");
         }
 
-
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
+        {
+            var user = await _userManager.FindByEmailAsync(loginRequestDto.UserName);
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
+            {
+                return Unauthorized("Invalid username or password");
+            }
+            return Ok("Login successful");
+        }
     }
 }
