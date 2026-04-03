@@ -5,7 +5,7 @@ namespace BookStore.Dtos.Incoming
     public class LoginRequestDto
     {
         [Required]
-        [DataType(DataType.Text)]
+        [DataType(DataType.EmailAddress)]
         public string UserName { get; set; }
         [Required]
         [DataType(DataType.Password)]
