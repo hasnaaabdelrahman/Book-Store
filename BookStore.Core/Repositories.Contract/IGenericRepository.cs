@@ -11,6 +11,7 @@ namespace BookStore.Core.Repositories.Contract
     {
         public Task<IReadOnlyList<T>> GetAllAsync();
         public Task<T> GetByIdAsync(Guid id);
+        public Task<T> GetByTitleAsync(string title);
         public void AddAsync(T entity);
         public void UpdateAsync(T entity);
         public void DeleteAsync(T entity);

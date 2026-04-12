@@ -36,6 +36,18 @@ namespace BookStore.Controllers
             }
             return Ok(book);
         }
+        [HttpGet]
+        [Route("search/{title}")]
+        [Authorize(Roles = "User,Admin")]
+        public async Task<ActionResult<Book>> GetBookByTitle(string title)
+        {
+            var book = await _bookServices.GetBookByTitleAsync(title);
+            if (book == null)
+            {
+                return NotFound();
+            }
+            return Ok(book);
+        }
 
         [HttpDelete]
         [Route("{id}")]
