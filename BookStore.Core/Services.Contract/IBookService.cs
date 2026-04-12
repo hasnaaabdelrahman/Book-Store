@@ -13,6 +13,7 @@ namespace BookStore.Core.Services.Contract
         Task <Book> GetBookByIdAsync(Guid id);
         Task<Book> CreateBookAsync(Book book);
         Task<Book> UpdateBookAsync(Book book);
+        Task<Book> GetBookByTitleAsync(string title);
         Task DeleteBookAsync(Guid id);
 
     }

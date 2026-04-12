@@ -38,6 +38,11 @@ namespace BookStore.Repository.Repositories
             return await _context.Set<T>().FindAsync(id);
         }
 
+        public async Task<T> GetByTitleAsync(string title)
+        {
+           return await _context.Set<T>().FirstAsync(e => EF.Property<string>(e, "Title").Contains(title));
+        }
+
         public void UpdateAsync(T entity)
         {
            _context.Set<T>().Update(entity);

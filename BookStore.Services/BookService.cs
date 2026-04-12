@@ -42,6 +42,11 @@ namespace BookStore.Services
 
         }
 
+        public async Task<Book> GetBookByTitleAsync(string title)
+        {
+            return await _unitOfWork.Repository<Book>().GetByTitleAsync(title);
+        }
+
         public async Task<Book> UpdateBookAsync(Book book)
         {
            _unitOfWork.Repository<Book>().UpdateAsync(book);
