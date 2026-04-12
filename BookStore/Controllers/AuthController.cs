@@ -1,4 +1,5 @@
-﻿using BookStore.Dtos.Incoming;
+﻿using BookStore.Core.Repositories.Contract;
+using BookStore.Dtos.Incoming;
 using BookStore.Dtos.outgoingDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,9 +12,13 @@ namespace BookStore.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
-        public AuthController(UserManager<IdentityUser> userManager)
+        private readonly ITokenRepository _tokenRepository;
+
+        public AuthController(UserManager<IdentityUser> userManager, ITokenRepository tokenRepository)
         {
+
             _userManager = userManager;
+            _tokenRepository = tokenRepository;
         }
 
         [HttpPost("register")]
@@ -43,10 +48,21 @@ namespace BookStore.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDto)
         {
-            var user = await _userManager.FindByEmailAsync(loginRequestDto.UserName);
+            var user = await _userManager.FindByEmailAsync(loginRequestDto.Email);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginRequestDto.Password))
             {
                 return Unauthorized("Invalid username or password");
+            }
+            var role = await _userManager.GetRolesAsync(user);
+            if(role != null)
+            {
+                var userRoles = role.ToList();
+                var jwtToken =  _tokenRepository.CreateJwtToken(user , userRoles);
+                var response = new LoginResponseDto
+                {
+                    Token = jwtToken,
+                };
+                return Ok(response);
             }
             return Ok("Login successful");
         }

@@ -1,6 +1,7 @@
 ﻿using BookStore.Core.Entities;
 using BookStore.Core.Services.Contract;
 using BookStore.Dtos.Incoming;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<IReadOnlyList<Book>>> GetAllBooks()
         {
             var books = await _bookServices.GetAllBooksAsync();
@@ -24,6 +26,7 @@ namespace BookStore.Controllers
         }
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<Book>> GetBookById(Guid id)
         {
             var book = await _bookServices.GetBookByIdAsync(id);
@@ -36,6 +39,7 @@ namespace BookStore.Controllers
 
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteBook(Guid id)
         {
     
@@ -44,6 +48,7 @@ namespace BookStore.Controllers
 
         }
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Book>> UpdateBook(UpdateBookDto updateBookDto)
         {
             var book = await _bookServices.GetBookByIdAsync(updateBookDto.Id);
@@ -57,6 +62,7 @@ namespace BookStore.Controllers
             return Ok(book);
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Book>> CreateBook(CreateBookDto createBookDto)
         {
             var book = new Book

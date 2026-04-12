@@ -1,6 +1,7 @@
 ﻿using BookStore.Core.Entities;
 using BookStore.Core.Services.Contract;
 using BookStore.Dtos.Incoming;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<IReadOnlyList<Category>>> GetAll()
         {
             var categories = await _categoryService.GetAllCategoriesAsync();
@@ -24,6 +26,7 @@ namespace BookStore.Controllers
         }
         [HttpGet]
         [Route("{id}")]
+        [Authorize(Roles = "User")]
         public async Task<ActionResult<Category>> GetById(Guid id)
         {
             var category = await _categoryService.GetCategoryByIdAsync(id);
@@ -34,6 +37,7 @@ namespace BookStore.Controllers
             return Ok(category);
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Category>> CreateCategory(CreateCategoryDto createCategoryDto)
         {
             var createdCategory = new Category
@@ -45,6 +49,7 @@ namespace BookStore.Controllers
             return Ok(createdCategory);
         }
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Category>> UpdateCategory(UpdateCategoryDto updateCategoryDto)
         {
             var category = await _categoryService.GetCategoryByIdAsync(updateCategoryDto.Id);
@@ -58,6 +63,7 @@ namespace BookStore.Controllers
         }
         [HttpDelete]
         [Route("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteCategory(Guid id)
         {
             var category = await _categoryService.GetCategoryByIdAsync(id);
