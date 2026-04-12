@@ -13,7 +13,7 @@ namespace BookStore.Core.Services.Contract
         public Task<Category> GetCategoryByIdAsync(Guid id);
         public Task<Category> CreateCategoryAsync(Category category);
         public Task<Category> UpdateCategoryAsync(Category category);
-         public Task DeleteCategoryAsync(Guid id);
+        public Task DeleteCategoryAsync(Guid id);
 
 
 
