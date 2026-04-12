@@ -18,7 +18,7 @@ namespace BookStore.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<ActionResult<IReadOnlyList<Book>>> GetAllBooks()
         {
             var books = await _bookServices.GetAllBooksAsync();
@@ -26,7 +26,7 @@ namespace BookStore.Controllers
         }
         [HttpGet]
         [Route("{id}")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User,Admin")]
         public async Task<ActionResult<Book>> GetBookById(Guid id)
         {
             var book = await _bookServices.GetBookByIdAsync(id);
