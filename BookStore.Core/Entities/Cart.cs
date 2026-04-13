@@ -13,5 +13,8 @@ namespace BookStore.Core.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        public Guid UserId { get; set; }
+        public List<CartItem> CartItems { get; set; }
+
     }
 }
