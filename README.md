@@ -176,6 +176,33 @@ Roles are seeded automatically into the `AuthDbContext` on startup.
 
 ---
 
+##  Book Service
+
+The book service handles all book-related business logic:
+
+- `GetAllBooksAsync()` — Retrieve all books
+- `GetBookByIdAsync(id)` — Find a book by its GUID
+- `GetBookByTitleAsync(title)` — Search books by title (partial match supported)
+- `CreateBookAsync(book)` — Add a new book linked to a category
+- `UpdateBookAsync(book)` — Update book title and price
+- `DeleteBookAsync(id)` — Remove a book by ID
+
+---
+
+##  Category Service
+
+The category service manages book categories:
+
+- `GetAllCategoriesAsync()` — Retrieve all categories
+- `GetCategoryByIdAsync(id)` — Find a category by its GUID
+- `CreateCategoryAsync(category)` — Create a new category
+- `UpdateCategoryAsync(category)` — Rename an existing category
+- `DeleteCategoryAsync(id)` — Remove a category by ID
+
+> **Note:** Each `Book` has an optional `CategoryId` foreign key. Deleting a category while books are still linked to it may cause constraint violations depending on your cascade delete configuration.
+
+---
+
 ##  Cart Service
 
 The cart is user-scoped and supports:
