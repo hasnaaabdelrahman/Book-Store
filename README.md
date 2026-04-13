@@ -1,6 +1,8 @@
 #  BookStore API
 
-A RESTful ASP.NET Core Web API for managing a book store. It supports book and category management, a shopping cart, and JWT-based authentication with role-based authorization.
+##  About
+
+RESTful Book Store API built with ASP.NET Core using Clean Architecture, Entity Framework, and SQL Server. Supports managing books, categories, and carts with scalable and maintainable design.
 
 ---
 
@@ -160,8 +162,39 @@ BookStore/
 │   ├── BookService.cs
 │   ├── CategoryService.cs
 │   └── CartService.cs
+├── Dtos/
+│   ├── Incoming/
+│   │   ├── CreateBookDto.cs
+│   │   ├── UpdateBookDto.cs
+│   │   ├── CreateCategoryDto.cs
+│   │   ├── UpdateCategoryDto.cs
+│   │   └── LoginRequestDto.cs
+│   └── outgoingDtos/
+│       ├── RegisterRequestDto.cs
+│       └── LoginResponseDto.cs
 └── Program.cs
 ```
+
+---
+
+##  DTOs (Data Transfer Objects)
+
+### Incoming (Request)
+
+| DTO | Used In | Fields |
+|-----|---------|--------|
+| `CreateBookDto` | `POST /api/Book` | `Title`, `Price`, `CategoryId?` |
+| `UpdateBookDto` | `PUT /api/Book` | `Id`, `Title`, `Price` |
+| `CreateCategoryDto` | `POST /api/Category` | `Name` |
+| `UpdateCategoryDto` | `PUT /api/Category` | `Id`, `Name` |
+| `LoginRequestDto` | `POST /api/Auth/Login` | `Email` *(required, email)*, `Password` *(required)* |
+| `RegisterRequestDto` | `POST /api/Auth/register` | `UserName`, `Email`, `Password` *(all required)*, `Roles[]` |
+
+### Outgoing (Response)
+
+| DTO | Used In | Fields |
+|-----|---------|--------|
+| `LoginResponseDto` | `POST /api/Auth/Login` | `Token` |
 
 ---
 
@@ -213,6 +246,93 @@ The cart is user-scoped and supports:
 - `GetCartItemsAsync(userId)` — List all items in a user's cart
 
 > **Note:** A `CartController` exposing these endpoints is not yet included and can be added as a next step.
+
+---
+
+## 🔧 Swagger Configuration
+
+Swagger is configured as an extension method in `SwaggerServiceExtensions.cs` to keep `Program.cs` clean.
+
+### Registration (in `Program.cs`)
+
+```csharp
+builder.Services.AddSwaggerDocumentation();
+// ...
+app.UseSwaggerDocumentation();
+```
+
+### What it does
+
+- **`AddSwaggerDocumentation`** — registers Swagger with API info (title: `Book Store`, version: `v1`) and adds JWT Bearer security definition so you can authorize directly from the Swagger UI using your token.
+- **`UseSwaggerDocumentation`** — enables the Swagger middleware and serves the UI at the **root URL** (`/`) instead of `/swagger`.
+
+### Authorizing in Swagger UI
+
+1. Run the app and open `http://localhost:<port>/`
+2. Call `POST /api/Auth/Login` to get your JWT token
+3. Click the **Authorize ** button at the top right
+4. Enter your token as:
+   ```
+   Bearer <your-token-here>
+   ```
+5. All subsequent requests will include the token automatically
+
+### Extension Class
+
+```csharp
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+namespace BookStore
+{
+    public static class SwaggerServiceExtensions
+    {
+        public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services)
+        {
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo { Version = "v1", Title = "Book Store" });
+
+                options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT"
+                });
+
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = JwtBearerDefaults.AuthenticationScheme
+                            }
+                        },
+                        new string[] {}
+                    }
+                });
+            });
+            return services;
+        }
+
+        public static IApplicationBuilder UseSwaggerDocumentation(this IApplicationBuilder app)
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API v1");
+                c.RoutePrefix = string.Empty; // Swagger at root URL
+            });
+            return app;
+        }
+    }
+}
+```
 
 ---
 
