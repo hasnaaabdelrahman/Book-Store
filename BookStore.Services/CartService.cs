@@ -21,38 +21,42 @@ namespace BookStore.Services
         public async Task AddToCartAsync(Guid userId, Guid bookId, int quantity)
         {
             var cart = await _unitOfWork.Repository<Cart>().GetByIdAsync(userId);
-            if(cart == null)
+
+            if (cart == null)
             {
-                cart = new Cart{ UserId = userId };
-                _unitOfWork.Repository<Cart>().AddAsync(cart);
-                _unitOfWork.SaveAsync();
+                cart = new Cart
+                {
+                    UserId = userId,
+                    CartItems = new List<CartItem>()
+                };
+
+                 _unitOfWork.Repository<Cart>().AddAsync(cart);
             }
-           var cartItem = cart.CartItems.FirstOrDefault(ci => ci.BookId == bookId);
-            if(cartItem != null)
+
+            if (cart.CartItems == null)
+            {
+                cart.CartItems = new List<CartItem>();
+            }
+
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.BookId == bookId);
+
+            if (cartItem != null)
             {
                 cartItem.Quantity += quantity;
-                _unitOfWork.Repository<Cart>().UpdateAsync(cart);
             }
             else
             {
-                var existingItem = await _unitOfWork.Repository<CartItem>().GetByIdAsync(bookId);
-                if(existingItem != null)
-                {
-                    existingItem.Quantity += quantity;
-                    _unitOfWork.Repository<CartItem>().UpdateAsync(existingItem);
-                }
-                var isExistingBook = cart.CartItems.FirstOrDefault(ci => ci.BookId == bookId);
-                if(isExistingBook != null) {
-                    throw new Exception("Book item not found.");
-                }
                 var newCartItem = new CartItem
                 {
                     BookId = bookId,
-                    Quantity = quantity
+                    Quantity = quantity,
+                    CartId = cart.Id 
                 };
-                _unitOfWork.Repository<CartItem>().AddAsync(newCartItem);    
+
+                cart.CartItems.Add(newCartItem);
             }
-             _unitOfWork.SaveAsync();
+
+            await _unitOfWork.SaveAsync();
         }
 
         public async Task ClearCart(Guid userId)
