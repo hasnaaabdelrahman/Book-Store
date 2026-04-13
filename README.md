@@ -249,7 +249,7 @@ The cart is user-scoped and supports:
 
 ---
 
-## 🔧 Swagger Configuration
+##  Swagger Configuration
 
 Swagger is configured as an extension method in `SwaggerServiceExtensions.cs` to keep `Program.cs` clean.
 
