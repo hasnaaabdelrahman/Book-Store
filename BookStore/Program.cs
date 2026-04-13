@@ -30,6 +30,7 @@ namespace BookStore
             builder.Services.AddScoped<ITokenRepository, TokenRepository>();
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<ICartService, CartService>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
